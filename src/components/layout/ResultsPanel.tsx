@@ -34,8 +34,24 @@ export default function ResultsPanel() {
     );
   }
 
+  const workingDistanceMm = config.workingDistanceMm;
   const overallStatus = getWarningStatus(result.warnings);
   const dofStatus = getDofStatus(result.dofTotalMm, target?.depthMm ?? 0);
+
+  const rad2deg = 180 / Math.PI;
+
+  // FOV angle at the object plane
+  const fovAngleH = 2 * Math.atan(result.fovHorizontalMm / 2 / workingDistanceMm) * rad2deg;
+  const fovAngleV = 2 * Math.atan(result.fovVerticalMm / 2 / workingDistanceMm) * rad2deg;
+  const fovAngleD = 2 * Math.atan(result.fovDiagonalMm / 2 / workingDistanceMm) * rad2deg;
+
+  // Target edge angle (half-angle from optical axis to target edge)
+  const targetW = target?.widthMm ?? 0;
+  const targetH = target?.heightMm ?? 0;
+  const targetDiag = Math.sqrt(targetW * targetW + targetH * targetH);
+  const targetEdgeH = Math.atan((targetW / 2) / workingDistanceMm) * rad2deg;
+  const targetEdgeV = Math.atan((targetH / 2) / workingDistanceMm) * rad2deg;
+  const targetEdgeD = Math.atan((targetDiag / 2) / workingDistanceMm) * rad2deg;
 
   // FOV vs Target status
   let fovStatus: 'ok' | 'warning' | 'error' = 'ok';
@@ -75,10 +91,22 @@ export default function ResultsPanel() {
                 <td className="text-right">{result.fovDiagonalMm.toFixed(1)}</td>
               </tr>
               <tr>
-                <td className="text-text-muted text-xs py-0.5">Angle (°)</td>
+                <td className="text-text-muted text-xs py-0.5">AOV (°)</td>
                 <td className="text-right">{(result.halfAngleHorizontalDeg * 2).toFixed(1)}</td>
                 <td className="text-right">{(result.halfAngleVerticalDeg * 2).toFixed(1)}</td>
                 <td className="text-right">{(result.halfAngleDiagonalDeg * 2).toFixed(1)}</td>
+              </tr>
+              <tr>
+                <td className="text-text-muted text-xs py-0.5">FOV ∠ (°)</td>
+                <td className="text-right">{fovAngleH.toFixed(1)}</td>
+                <td className="text-right">{fovAngleV.toFixed(1)}</td>
+                <td className="text-right">{fovAngleD.toFixed(1)}</td>
+              </tr>
+              <tr>
+                <td className="text-text-muted text-xs py-0.5">Target ∠ (°)</td>
+                <td className="text-right">{targetEdgeH.toFixed(1)}</td>
+                <td className="text-right">{targetEdgeV.toFixed(1)}</td>
+                <td className="text-right">{targetEdgeD.toFixed(1)}</td>
               </tr>
               <tr>
                 <td className="text-text-muted text-xs py-0.5">px/mm</td>

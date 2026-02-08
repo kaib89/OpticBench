@@ -56,10 +56,10 @@ export function calculate(
 
   const dofTotalMm = dofFarMm === Infinity ? Infinity : dofFarMm - dofNearMm;
 
-  // Bildwinkel (halber Winkel)
-  const halfAngleHorizontalDeg = Math.atan(sensorW / (2 * imageDistanceMm)) * (180 / Math.PI);
-  const halfAngleVerticalDeg = Math.atan(sensorH / (2 * imageDistanceMm)) * (180 / Math.PI);
-  const halfAngleDiagonalDeg = Math.atan(sensorD / (2 * imageDistanceMm)) * (180 / Math.PI);
+  // AOV: standard angle of view (constant, lens+sensor property)
+  const halfAngleHorizontalDeg = Math.atan(sensorW / (2 * f)) * (180 / Math.PI);
+  const halfAngleVerticalDeg = Math.atan(sensorH / (2 * f)) * (180 / Math.PI);
+  const halfAngleDiagonalDeg = Math.atan(sensorD / (2 * f)) * (180 / Math.PI);
 
   // Effektive Blende
   const effectiveAperture = aperture * (1 + absMag);
